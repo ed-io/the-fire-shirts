@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { NgxMaskConfig, NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+
 import { DomSanitizer } from '@angular/platform-browser';
 import { SuccessModalComponent } from './success-modal.component';
 
@@ -26,7 +34,13 @@ export interface Order {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SuccessModalComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    SuccessModalComponent,
+    NgxMaskDirective,
+  ],
+  providers: [provideNgxMask()],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -35,15 +49,12 @@ export class AppComponent implements OnInit {
   showValidation = false;
   showSuccessModal = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private sanitizer: DomSanitizer
-  ) {
+  constructor(private fb: FormBuilder, private sanitizer: DomSanitizer) {
     this.orderForm = this.fb.group({
       full_name: ['', [Validators.required, Validators.minLength(2)]],
-      phone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/)]],
+      phone: ['', [Validators.required, Validators.minLength(11)]],
       payment_method: ['', Validators.required],
-      shirts: this.fb.array([])
+      shirts: this.fb.array([]),
     });
   }
 
@@ -82,7 +93,7 @@ export class AppComponent implements OnInit {
         bust_cm: [null],
         waist_cm: [null],
         hips_cm: [null],
-        length_cm: [null]
+        length_cm: [null],
       });
 
       this.shirtsArray.push(shirtGroup);
@@ -174,7 +185,11 @@ export class AppComponent implements OnInit {
 
   // Verifica se o formulário pode ser enviado
   canSubmitOrder(): boolean {
-    return this.orderForm.valid && this.validateCustomerData() && this.validateShirts();
+    return (
+      this.orderForm.valid &&
+      this.validateCustomerData() &&
+      this.validateShirts()
+    );
   }
 
   // Atualiza validação quando o tamanho muda
@@ -183,10 +198,18 @@ export class AppComponent implements OnInit {
     const size = shirtGroup.get('size')?.value;
 
     if (size === 'Custom') {
-      shirtGroup.get('bust_cm')?.setValidators([Validators.required, Validators.min(1)]);
-      shirtGroup.get('waist_cm')?.setValidators([Validators.required, Validators.min(1)]);
-      shirtGroup.get('hips_cm')?.setValidators([Validators.required, Validators.min(1)]);
-      shirtGroup.get('length_cm')?.setValidators([Validators.required, Validators.min(1)]);
+      shirtGroup
+        .get('bust_cm')
+        ?.setValidators([Validators.required, Validators.min(1)]);
+      shirtGroup
+        .get('waist_cm')
+        ?.setValidators([Validators.required, Validators.min(1)]);
+      shirtGroup
+        .get('hips_cm')
+        ?.setValidators([Validators.required, Validators.min(1)]);
+      shirtGroup
+        .get('length_cm')
+        ?.setValidators([Validators.required, Validators.min(1)]);
     } else {
       shirtGroup.get('bust_cm')?.clearValidators();
       shirtGroup.get('waist_cm')?.clearValidators();
@@ -206,7 +229,9 @@ export class AppComponent implements OnInit {
       this.orderForm.markAllAsTouched();
 
       if (!this.canSubmitOrder()) {
-        console.error('Formulário inválido. Por favor, preencha todos os campos obrigatórios.');
+        console.error(
+          'Formulário inválido. Por favor, preencha todos os campos obrigatórios.'
+        );
         return;
       }
 
@@ -222,9 +247,11 @@ export class AppComponent implements OnInit {
           bust_cm: this.sanitizeNumber(shirt.bust_cm),
           waist_cm: this.sanitizeNumber(shirt.waist_cm),
           hips_cm: this.sanitizeNumber(shirt.hips_cm),
-          length_cm: this.sanitizeNumber(shirt.length_cm)
-        }))
+          length_cm: this.sanitizeNumber(shirt.length_cm),
+        })),
       };
+
+      console.log(sanitizedOrder);
 
       this.orderForm.reset();
       this.shirtsArray.clear();
@@ -233,7 +260,6 @@ export class AppComponent implements OnInit {
 
       // Mostrar modal de sucesso
       this.showSuccessModal = true;
-
     } catch (error) {
       console.error('Erro ao criar pedido:', error);
       console.error('Erro ao criar pedido. Tente novamente.');
