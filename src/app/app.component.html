@@ -11,18 +11,16 @@
 
       <form [formGroup]="orderForm" (ngSubmit)="createOrder()" class="p-6 space-y-6">
         <!-- Customer Info -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="space-y-2">
             <label class="text-sm font-medium text-slate-700">
               Nome Completo <span class="text-red-500">*</span>
             </label>
-            <input
-              formControlName="full_name"
-              placeholder="Digite o nome completo"
+            <input formControlName="full_name" placeholder="Digite o nome completo"
               class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
-              [class.border-red-300]="showValidation && fullNameControl?.invalid && fullNameControl?.touched"
-            >
-            <div *ngIf="showValidation && fullNameControl?.invalid && fullNameControl?.touched" class="text-xs text-red-500">
+              [class.border-red-300]="showValidation && fullNameControl?.invalid && fullNameControl?.touched">
+            <div *ngIf="showValidation && fullNameControl?.invalid && fullNameControl?.touched"
+              class="text-xs text-red-500">
               <span *ngIf="fullNameControl?.errors?.['required']">Nome é obrigatório</span>
               <span *ngIf="fullNameControl?.errors?.['minlength']">Nome deve ter pelo menos 2 caracteres</span>
             </div>
@@ -32,14 +30,9 @@
             <label class="text-sm font-medium text-slate-700">
               Telefone (WhatsApp) <span class="text-red-500">*</span>
             </label>
-            <input
-              type="tel"
-              formControlName="phone"
-              placeholder="(11) 99999-9999"
-              mask="(99) 99999-9999"
+            <input type="tel" formControlName="phone" placeholder="(11) 99999-9999" mask="(99) 99999-9999"
               class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
-              [class.border-red-300]="showValidation && phoneControl?.invalid && phoneControl?.touched"
-            >
+              [class.border-red-300]="showValidation && phoneControl?.invalid && phoneControl?.touched">
             <div *ngIf="showValidation && phoneControl?.invalid && phoneControl?.touched" class="text-xs text-red-500">
               <span *ngIf="phoneControl?.errors?.['required']">Telefone é obrigatório</span>
               <span *ngIf="phoneControl?.errors?.['pattern']">Formato: (11) 99999-9999</span>
@@ -50,19 +43,35 @@
             <label class="text-sm font-medium text-slate-700">
               Forma de Pagamento <span class="text-red-500">*</span>
             </label>
-            <select
-              formControlName="payment_method"
+            <select formControlName="payment_method"
               class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
-              [class.border-red-300]="showValidation && paymentMethodControl?.invalid && paymentMethodControl?.touched"
-            >
+              [class.border-red-300]="showValidation && paymentMethodControl?.invalid && paymentMethodControl?.touched">
               <option value="" disabled selected>Selecione</option>
               <option value="Pix">Pix</option>
               <option value="Credit">Cartão de Crédito</option>
               <option value="Cash">Dinheiro</option>
             </select>
-            <div *ngIf="showValidation && paymentMethodControl?.invalid && paymentMethodControl?.touched" class="text-xs text-red-500">
+            <div *ngIf="showValidation && paymentMethodControl?.invalid && paymentMethodControl?.touched"
+              class="text-xs text-red-500">
               Forma de pagamento é obrigatória
             </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-slate-700">
+              Melhor Data para Pagamento <span class="text-red-500">*</span>
+            </label>
+            <input type="date" formControlName="payment_date" [min]="getTodayDate()"
+              class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
+              [class.border-red-300]="showValidation && paymentDateControl?.invalid && paymentDateControl?.touched">
+            <div *ngIf="showValidation && paymentDateControl?.invalid && paymentDateControl?.touched"
+              class="text-xs text-red-500">
+              <span *ngIf="paymentDateControl?.errors?.['required']">Data de pagamento é obrigatória</span>
+              <span *ngIf="paymentDateControl?.errors?.['pastDate']">A data deve ser hoje ou no futuro</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-1 font-semibold">
+              Entraremos em contato nesta data para verificar o pagamento
+            </p>
           </div>
         </div>
 
@@ -70,14 +79,11 @@
         <div class="space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-slate-800">Camisetas</h3>
-            <button
-              type="button"
-              (click)="addShirt()"
-              [disabled]="shirtsArray.length >= 5"
-              class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-            >
+            <button type="button" (click)="addShirt()" [disabled]="shirtsArray.length >= 5"
+              class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                </path>
               </svg>
               Adicionar Camiseta
             </button>
@@ -85,17 +91,11 @@
 
           <!-- Shirts Grid -->
           <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-            <div
-              *ngFor="let shirtGroup of shirtsArray.controls; let i = index; trackBy: trackByShirtId"
-              class="relative bg-slate-50 border border-slate-200 rounded-xl p-4 hover:shadow-md transition-all duration-200"
-            >
+            <div *ngFor="let shirtGroup of shirtsArray.controls; let i = index; trackBy: trackByShirtId"
+              class="relative bg-slate-50 border border-slate-200 rounded-xl p-4 hover:shadow-md transition-all duration-200">
               <!-- Remove Button -->
-              <button
-                type="button"
-                (click)="removeShirt(i)"
-                [disabled]="shirtsArray.length <= 1"
-                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full hover:bg-red-600 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
-              >
+              <button type="button" (click)="removeShirt(i)" [disabled]="shirtsArray.length <= 1"
+                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full hover:bg-red-600 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -107,16 +107,15 @@
                   <label class="text-xs font-medium text-slate-700">
                     Cor <span class="text-red-500">*</span>
                   </label>
-                  <select
-                    formControlName="color"
+                  <select formControlName="color"
                     class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                    [class.border-red-300]="showValidation && shirtGroup.get('color')?.invalid && shirtGroup.get('color')?.touched"
-                  >
+                    [class.border-red-300]="showValidation && shirtGroup.get('color')?.invalid && shirtGroup.get('color')?.touched">
                     <option value="" disabled selected>Selecione a cor</option>
                     <option value="Off white">Off White</option>
                     <option value="Black">Preto</option>
                   </select>
-                  <div *ngIf="showValidation && shirtGroup.get('color')?.invalid && shirtGroup.get('color')?.touched" class="text-xs text-red-500 mt-1">
+                  <div *ngIf="showValidation && shirtGroup.get('color')?.invalid && shirtGroup.get('color')?.touched"
+                    class="text-xs text-red-500 mt-1">
                     Cor é obrigatória
                   </div>
                 </div>
@@ -125,12 +124,9 @@
                   <label class="text-xs font-medium text-slate-700">
                     Tamanho <span class="text-red-500">*</span>
                   </label>
-                  <select
-                    formControlName="size"
-                    (change)="onSizeChange(i)"
+                  <select formControlName="size" (change)="onSizeChange(i)"
                     class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                    [class.border-red-300]="showValidation && shirtGroup.get('size')?.invalid && shirtGroup.get('size')?.touched"
-                  >
+                    [class.border-red-300]="showValidation && shirtGroup.get('size')?.invalid && shirtGroup.get('size')?.touched">
                     <option value="" disabled selected>Selecione o tamanho</option>
                     <option value="PP">PP</option>
                     <option value="P">P</option>
@@ -140,26 +136,26 @@
                     <option value="EXG">EXG</option>
                     <option value="Custom">Personalizado</option>
                   </select>
-                  <div *ngIf="showValidation && shirtGroup.get('size')?.invalid && shirtGroup.get('size')?.touched" class="text-xs text-red-500 mt-1">
+                  <div *ngIf="showValidation && shirtGroup.get('size')?.invalid && shirtGroup.get('size')?.touched"
+                    class="text-xs text-red-500 mt-1">
                     Tamanho é obrigatório
                   </div>
                 </div>
 
                 <!-- Custom size fields -->
-                <div *ngIf="shirtGroup.get('size')?.value === 'Custom'" class="space-y-3 pt-2 border-t border-slate-200">
+                <div *ngIf="shirtGroup.get('size')?.value === 'Custom'"
+                  class="space-y-3 pt-2 border-t border-slate-200">
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label class="text-xs font-medium text-slate-700">
                         Busto (cm) <span class="text-red-500">*</span>
                       </label>
-                      <input
-                        formControlName="bust_cm"
-                        type="number"
-                        placeholder="Busto"
+                      <input formControlName="bust_cm" type="number" placeholder="Busto"
                         class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                        [class.border-red-300]="showValidation && shirtGroup.get('bust_cm')?.invalid && shirtGroup.get('bust_cm')?.touched"
-                      >
-                      <div *ngIf="showValidation && shirtGroup.get('bust_cm')?.invalid && shirtGroup.get('bust_cm')?.touched" class="text-xs text-red-500 mt-1">
+                        [class.border-red-300]="showValidation && shirtGroup.get('bust_cm')?.invalid && shirtGroup.get('bust_cm')?.touched">
+                      <div
+                        *ngIf="showValidation && shirtGroup.get('bust_cm')?.invalid && shirtGroup.get('bust_cm')?.touched"
+                        class="text-xs text-red-500 mt-1">
                         <span *ngIf="shirtGroup.get('bust_cm')?.errors?.['required']">Busto é obrigatório</span>
                         <span *ngIf="shirtGroup.get('bust_cm')?.errors?.['min']">Busto deve ser maior que 0</span>
                       </div>
@@ -169,14 +165,12 @@
                       <label class="text-xs font-medium text-slate-700">
                         Cintura (cm) <span class="text-red-500">*</span>
                       </label>
-                      <input
-                        formControlName="waist_cm"
-                        type="number"
-                        placeholder="Cintura"
+                      <input formControlName="waist_cm" type="number" placeholder="Cintura"
                         class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                        [class.border-red-300]="showValidation && shirtGroup.get('waist_cm')?.invalid && shirtGroup.get('waist_cm')?.touched"
-                      >
-                      <div *ngIf="showValidation && shirtGroup.get('waist_cm')?.invalid && shirtGroup.get('waist_cm')?.touched" class="text-xs text-red-500 mt-1">
+                        [class.border-red-300]="showValidation && shirtGroup.get('waist_cm')?.invalid && shirtGroup.get('waist_cm')?.touched">
+                      <div
+                        *ngIf="showValidation && shirtGroup.get('waist_cm')?.invalid && shirtGroup.get('waist_cm')?.touched"
+                        class="text-xs text-red-500 mt-1">
                         <span *ngIf="shirtGroup.get('waist_cm')?.errors?.['required']">Cintura é obrigatória</span>
                         <span *ngIf="shirtGroup.get('waist_cm')?.errors?.['min']">Cintura deve ser maior que 0</span>
                       </div>
@@ -188,14 +182,12 @@
                       <label class="text-xs font-medium text-slate-700">
                         Quadril (cm) <span class="text-red-500">*</span>
                       </label>
-                      <input
-                        formControlName="hips_cm"
-                        type="number"
-                        placeholder="Quadril"
+                      <input formControlName="hips_cm" type="number" placeholder="Quadril"
                         class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                        [class.border-red-300]="showValidation && shirtGroup.get('hips_cm')?.invalid && shirtGroup.get('hips_cm')?.touched"
-                      >
-                      <div *ngIf="showValidation && shirtGroup.get('hips_cm')?.invalid && shirtGroup.get('hips_cm')?.touched" class="text-xs text-red-500 mt-1">
+                        [class.border-red-300]="showValidation && shirtGroup.get('hips_cm')?.invalid && shirtGroup.get('hips_cm')?.touched">
+                      <div
+                        *ngIf="showValidation && shirtGroup.get('hips_cm')?.invalid && shirtGroup.get('hips_cm')?.touched"
+                        class="text-xs text-red-500 mt-1">
                         <span *ngIf="shirtGroup.get('hips_cm')?.errors?.['required']">Quadril é obrigatório</span>
                         <span *ngIf="shirtGroup.get('hips_cm')?.errors?.['min']">Quadril deve ser maior que 0</span>
                       </div>
@@ -205,16 +197,15 @@
                       <label class="text-xs font-medium text-slate-700">
                         Comprimento (cm) <span class="text-red-500">*</span>
                       </label>
-                      <input
-                        formControlName="length_cm"
-                        type="number"
-                        placeholder="Comprimento"
+                      <input formControlName="length_cm" type="number" placeholder="Comprimento"
                         class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                        [class.border-red-300]="showValidation && shirtGroup.get('length_cm')?.invalid && shirtGroup.get('length_cm')?.touched"
-                      >
-                      <div *ngIf="showValidation && shirtGroup.get('length_cm')?.invalid && shirtGroup.get('length_cm')?.touched" class="text-xs text-red-500 mt-1">
+                        [class.border-red-300]="showValidation && shirtGroup.get('length_cm')?.invalid && shirtGroup.get('length_cm')?.touched">
+                      <div
+                        *ngIf="showValidation && shirtGroup.get('length_cm')?.invalid && shirtGroup.get('length_cm')?.touched"
+                        class="text-xs text-red-500 mt-1">
                         <span *ngIf="shirtGroup.get('length_cm')?.errors?.['required']">Comprimento é obrigatório</span>
-                        <span *ngIf="shirtGroup.get('length_cm')?.errors?.['min']">Comprimento deve ser maior que 0</span>
+                        <span *ngIf="shirtGroup.get('length_cm')?.errors?.['min']">Comprimento deve ser maior que
+                          0</span>
                       </div>
                     </div>
                   </div>
@@ -226,10 +217,8 @@
 
         <!-- Submit Button -->
         <div class="pt-4 border-t border-slate-200">
-          <button
-            type="submit"
-            class="w-full bg-gradient-to-r from-red-600 to-orange-600 text-white py-3 px-6 rounded-lg font-medium hover:from-red-700 hover:to-orange-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02]"
-          >
+          <button type="submit"
+            class="w-full bg-gradient-to-r from-red-600 to-orange-600 text-white py-3 px-6 rounded-lg font-medium hover:from-red-700 hover:to-orange-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02]">
             <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
@@ -241,8 +230,85 @@
   </div>
 
   <!-- Success Modal -->
-  <app-success-modal
-    [isVisible]="showSuccessModal"
-    (close)="closeSuccessModal()">
+  <app-success-modal [isVisible]="showSuccessModal" (close)="closeSuccessModal()">
   </app-success-modal>
+
+  <!-- Image Modal -->
+  <app-image-modal [isVisible]="showImageModal" [imageSrc]="currentImage.src" [imageAlt]="currentImage.alt"
+    [imageTitle]="currentImage.title" [imageDescription]="currentImage.description" [showNavigation]="true"
+    [currentIndex]="currentImageIndex" [images]="shirtImages" (close)="closeImageModal()" (previous)="previousImage()"
+    (next)="nextImage()">
+  </app-image-modal>
+
+  <!-- Shirt Gallery Section -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+      <!-- Gallery Header -->
+      <div class="bg-gradient-to-r from-red-600 to-orange-600 px-6 py-4">
+        <h2 class="text-xl font-semibold text-white">Nossas Camisetas</h2>
+        <p class="text-red-100 text-sm mt-1">Veja como ficam as camisetas personalizadas</p>
+      </div>
+
+      <!-- Gallery Content -->
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Off White Shirt -->
+          <div class="text-center space-y-4">
+            <div class="relative group cursor-pointer" (click)="openImageModal(0)">
+              <img src="/images/off-white-shirt.jpg" alt="Camiseta Off White - The Fire"
+                class="w-full h-80 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105"
+                loading="lazy">
+              <div
+                class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-xl transition-all duration-300">
+              </div>
+              <!-- Zoom Icon -->
+              <div
+                class="absolute top-4 right-4 w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-lg font-semibold text-slate-800">Off White</h3>
+              <p class="text-sm text-slate-600">Elegante e sofisticada, ideal para looks modernos</p>
+              <div
+                class="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-full">
+                Disponível
+              </div>
+            </div>
+          </div>
+
+          <!-- Black Shirt -->
+          <div class="text-center space-y-4">
+            <div class="relative group cursor-pointer" (click)="openImageModal(1)">
+              <img src="/images/black-shirt.jpg" alt="Camiseta Preta - The Fire"
+                class="w-full h-80 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105"
+                loading="lazy">
+              <div
+                class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-xl transition-all duration-300">
+              </div>
+              <!-- Zoom Icon -->
+              <div
+                class="absolute top-4 right-4 w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-lg font-semibold text-slate-800">Preto</h3>
+              <p class="text-sm text-slate-600">Cor clássica e versátil, perfeita para qualquer ocasião</p>
+              <div
+                class="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-full">
+                Disponível
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -5,30 +5,6 @@ export const SUPABASE_CONFIG = {
   // Add other configuration options as needed
 };
 
-// Database table schemas (for reference)
-export interface DatabaseSchema {
-  orders: {
-    id: string;
-    full_name: string;
-    phone: string;
-    payment_method: string;
-    created_at: string;
-    updated_at: string;
-  };
-
-  shirts: {
-    id: string;
-    order_id: string;
-    color: string;
-    size: string;
-    bust_cm?: number;
-    waist_cm?: number;
-    hips_cm?: number;
-    length_cm?: number;
-    created_at: string;
-  };
-}
-
 // Example queries for future implementation
 export const SUPABASE_QUERIES = {
   // Get all orders with shirts

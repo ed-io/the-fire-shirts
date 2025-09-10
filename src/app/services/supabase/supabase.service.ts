@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Order, Shirt } from './app.component';
+
+import { Order } from '../../models/order.model';
+import { Shirt } from '../../models/shirts.model';
 
 @Injectable({
   providedIn: 'root'
