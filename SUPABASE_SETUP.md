@@ -18,21 +18,32 @@ npm install @supabase/supabase-js
 
 ### 2. Configurar Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz do projeto:
+#### Para Desenvolvimento Local
 
-```env
-VITE_SUPABASE_URL=sua_url_do_supabase
-VITE_SUPABASE_ANON_KEY=sua_chave_anonima
+Edite `src/environments/environment.development.ts`:
+
+```typescript
+export const environment = {
+    SUPABASE_URL: 'sua-url-do-supabase',
+    SUPABASE_ANON_KEY: 'sua-chave-anonima',
+};
 ```
+
+#### Para Produção (Vercel)
+
+Veja o arquivo `VERCEL_SETUP.md` para instruções detalhadas de configuração na Vercel.
 
 ### 3. Atualizar a Configuração
 
-Edite `src/app/supabase.config.ts`:
+A configuração já está atualizada para usar os arquivos de ambiente do Angular:
 
 ```typescript
+// src/app/supabase.config.ts
+import { environment } from "../../../environments/environment";
+
 export const SUPABASE_CONFIG = {
-  url: import.meta.env.VITE_SUPABASE_URL,
-  anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+  url: environment.SUPABASE_URL,
+  anonKey: environment.SUPABASE_ANON_KEY,
 };
 ```
 
