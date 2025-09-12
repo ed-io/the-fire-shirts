@@ -13,6 +13,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { SuccessModalComponent } from './modals/success-modal.component';
 import { ImageModalComponent } from './modals/image-modal.component';
+import { SupabaseService } from './services/supabase/supabase.service';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +35,8 @@ export class AppComponent implements OnInit {
   showSuccessModal = false;
   showImageModal = false;
   currentImageIndex = 0;
-  
+  shirtPrice = 50; // Preço de cada camiseta
+
   // Dados das imagens das camisetas
   shirtImages = [
     {
@@ -51,35 +53,21 @@ export class AppComponent implements OnInit {
     }
   ];
 
-  constructor(private fb: FormBuilder, private sanitizer: DomSanitizer) {
+  constructor(
+    private fb: FormBuilder,
+    private supabaseService: SupabaseService
+  ) {
     this.orderForm = this.fb.group({
       full_name: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.required, Validators.minLength(11)]],
       payment_method: ['', Validators.required],
-      payment_date: ['', [Validators.required, this.futureDateValidator]],
+      payment_date: ['', Validators.required],
       shirts: this.fb.array([]),
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.addShirt();
-  }
-
-  // Validador personalizado para data de pagamento
-  futureDateValidator(control: any) {
-    if (!control.value) {
-      return null;
-    }
-
-    const selectedDate = new Date(control.value);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Zerar as horas para comparar apenas a data
-
-    if (selectedDate < today) {
-      return { pastDate: true };
-    }
-
-    return null;
   }
 
   private generateId(): string {
@@ -106,6 +94,11 @@ export class AppComponent implements OnInit {
 
   get paymentDateControl() {
     return this.orderForm.get('payment_date');
+  }
+
+  // Getter para calcular o valor total
+  get totalPrice(): number {
+    return this.shirtsArray.length * this.shirtPrice;
   }
 
   addShirt() {
@@ -258,30 +251,40 @@ export class AppComponent implements OnInit {
       this.orderForm.markAllAsTouched();
 
       if (!this.canSubmitOrder()) {
-        console.error(
-          'Formulário inválido. Por favor, preencha todos os campos obrigatórios.'
-        );
         return;
       }
 
       const formValue = this.orderForm.value;
+      
+      // Converter "now" para data atual se necessário
+      let paymentDate = formValue.payment_date;
+      if (paymentDate === 'now') {
+        paymentDate = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      }
+      
       const sanitizedOrder = {
         full_name: this.sanitizeInput(formValue.full_name),
         phone: this.sanitizeInput(formValue.phone),
         payment_method: formValue.payment_method,
-        payment_date: formValue.payment_date,
-        shirts: formValue.shirts.map((shirt: any) => ({
-          id: shirt.id,
-          color: shirt.color,
-          size: shirt.size,
-          bust_cm: this.sanitizeNumber(shirt.bust_cm),
-          waist_cm: this.sanitizeNumber(shirt.waist_cm),
-          hips_cm: this.sanitizeNumber(shirt.hips_cm),
-          length_cm: this.sanitizeNumber(shirt.length_cm),
-        })),
+        payment_date: paymentDate,
       };
 
-      console.log(sanitizedOrder);
+      const sanitizedShirts = formValue.shirts.map((shirt: any) => ({
+        color: shirt.color,
+        size: shirt.size,
+        bust_cm: this.sanitizeNumber(shirt.bust_cm),
+        waist_cm: this.sanitizeNumber(shirt.waist_cm),
+        hips_cm: this.sanitizeNumber(shirt.hips_cm),
+        length_cm: this.sanitizeNumber(shirt.length_cm),
+      }));
+
+      // Salvar no Supabase
+      const { success, error } = await this.supabaseService.createOrder(sanitizedOrder, sanitizedShirts);
+      
+      if (error) {
+        alert('Erro ao salvar pedido. Tente novamente.');
+        return;
+      }
 
       this.orderForm.reset();
       this.shirtsArray.clear();
@@ -291,8 +294,7 @@ export class AppComponent implements OnInit {
       // Mostrar modal de sucesso
       this.showSuccessModal = true;
     } catch (error) {
-      console.error('Erro ao criar pedido:', error);
-      console.error('Erro ao criar pedido. Tente novamente.');
+      // Erro silencioso - apenas o alert do Supabase será exibido
     }
   }
 
@@ -304,11 +306,6 @@ export class AppComponent implements OnInit {
     return item.get('id')?.value || index;
   }
 
-  // Método para obter a data de hoje no formato YYYY-MM-DD
-  getTodayDate(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  }
 
   // Métodos para controlar o modal de imagem
   openImageModal(index: number) {

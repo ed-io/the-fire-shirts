@@ -1,8 +1,8 @@
-// Supabase configuration for future integration
+import { environment } from "../../../environments/environment";
+
 export const SUPABASE_CONFIG = {
-  url: 'YOUR_SUPABASE_URL',
-  anonKey: 'YOUR_SUPABASE_ANON_KEY',
-  // Add other configuration options as needed
+  url: environment.SUPABASE_URL,
+  anonKey: environment.SUPABASE_ANON_KEY,
 };
 
 // Example queries for future implementation
