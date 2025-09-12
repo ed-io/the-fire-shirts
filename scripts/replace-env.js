@@ -27,7 +27,7 @@ function replaceEnvVars() {
 
 // Executar apenas se for chamado diretamente
 if (require.main === module) {
-  replaceEnvVars();
+  replaceEnvVars(); 
 }
 
 module.exports = replaceEnvVars;
