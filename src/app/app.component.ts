@@ -41,13 +41,13 @@ export class AppComponent implements OnInit {
   shirtImages = [
     {
       src: '/images/off-white-shirt.jpg',
-      alt: 'Camiseta Off White - The Fire',
+      alt: 'Camiseta Off White - Conferência The Fire',
       title: 'Off White',
       description: 'Cor clássica e versátil, perfeita para qualquer ocasião'
     },
     {
       src: '/images/black-shirt.jpg',
-      alt: 'Camiseta Preta - The Fire',
+      alt: 'Camiseta Preta - Conferência The Fire',
       title: 'Preto',
       description: 'Elegante e sofisticada, ideal para looks modernos'
     }
