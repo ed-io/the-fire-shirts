@@ -2,12 +2,12 @@
   "name": "thefire-shirts",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build:prod": "ng build --configuration production",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "ng": "node -r dotenv/config ./node_modules/.bin/ng",
+    "start": "node -r dotenv/config ./node_modules/.bin/ng serve",
+    "build": "node -r dotenv/config ./node_modules/.bin/ng build",
+    "build:prod": "node -r dotenv/config ./node_modules/.bin/ng build --configuration production",
+    "watch": "node -r dotenv/config ./node_modules/.bin/ng build --watch --configuration development",
+    "test": "node -r dotenv/config ./node_modules/.bin/ng test"
   },
   "private": true,
   "dependencies": {
