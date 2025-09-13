@@ -1,4 +1,0 @@
-export const environment = {
-    SUPABASE_URL: 'your-supabase-url-here',
-    SUPABASE_ANON_KEY: 'your-supabase-anon-key-here',
-};

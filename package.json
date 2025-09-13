@@ -2,12 +2,11 @@
   "name": "thefire-shirts",
   "version": "0.0.0",
   "scripts": {
-    "ng": "node -r dotenv/config ./node_modules/.bin/ng",
-    "start": "node -r dotenv/config ./node_modules/.bin/ng serve",
-    "build": "node -r dotenv/config ./node_modules/.bin/ng build",
-    "build:prod": "node -r dotenv/config ./node_modules/.bin/ng build --configuration production",
-    "watch": "node -r dotenv/config ./node_modules/.bin/ng build --watch --configuration development",
-    "test": "node -r dotenv/config ./node_modules/.bin/ng test"
+    "ng": "ng",
+    "start": "node -r dotenv/config build-config.js && ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -31,7 +30,6 @@
     "@angular-devkit/build-angular": "^18.2.12",
     "@angular/cli": "^18.2.12",
     "@angular/compiler-cli": "^18.2.0",
-    "@ngx-env/builder": "^18.0.0",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.21",
     "jasmine-core": "~5.2.0",

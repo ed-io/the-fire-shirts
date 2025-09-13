@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Order } from '../../models/order.model';
 import { Shirt } from '../../models/shirts.model';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({ 
@@ -13,8 +14,8 @@ export class SupabaseService {
   private supabase: SupabaseClient;
 
   constructor() {
-    const supabaseUrl = process.env['NG_APP_SUPABASE_URL']!;
-    const supabaseAnonKey = process.env['NG_APP_SUPABASE_ANON_KEY']!;
+    const supabaseUrl = environment.SUPABASE_URL;
+    const supabaseAnonKey = environment.SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
       throw new Error('Supabase URL ou anon key não definidas nas variáveis de ambiente');
