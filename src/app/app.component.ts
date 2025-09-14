@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   showImageModal = false;
   currentImageIndex = 0;
   shirtPrice = 50; // Preço de cada camiseta
+  isSubmitting = false; // Loading state
 
   // Dados das imagens das camisetas
   shirtImages = [
@@ -247,10 +248,12 @@ export class AppComponent implements OnInit {
 
   async createOrder() {
     try {
+      this.isSubmitting = true; // Iniciar loading
       this.showValidation = true;
       this.orderForm.markAllAsTouched();
 
       if (!this.canSubmitOrder()) {
+        this.isSubmitting = false; // Parar loading se validação falhar
         return;
       }
 
@@ -283,6 +286,7 @@ export class AppComponent implements OnInit {
       
       if (error) {
         alert('Erro ao salvar pedido. Tente novamente.');
+        this.isSubmitting = false; // Parar loading em caso de erro
         return;
       }
 
@@ -295,6 +299,9 @@ export class AppComponent implements OnInit {
       this.showSuccessModal = true;
     } catch (error) {
       // Erro silencioso - apenas o alert do Supabase será exibido
+      this.isSubmitting = false; // Parar loading em caso de erro
+    } finally {
+      this.isSubmitting = false; // Garantir que o loading pare
     }
   }
 

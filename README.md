@@ -1,6 +1,6 @@
-# The Fire 🔥
+# Conferência The Fire 🔥
 
-Sistema de controle interno para gerenciamento de pedidos de camisetas personalizadas, construído com Angular e Tailwind CSS.
+Sistema de controle interno para gerenciamento de pedidos de camisetas personalizadas da Conferência The Fire, construído com Angular, Supabase e deployado na Vercel.
 
 ## ✨ Características
 
@@ -15,7 +15,7 @@ Sistema de controle interno para gerenciamento de pedidos de camisetas personali
 ### Pedidos Internos
 - ✅ Cadastro de cliente (nome, telefone, forma de pagamento)
 - ✅ Múltiplas camisetas por pedido (até 5)
-- ✅ Tamanhos padrão (PP, P, M, G, GG, EXG)
+- ✅ Tamanhos padrão (P, M, G, GG, EXG, G1, G2, G3, G4)
 - ✅ Tamanhos personalizados com medidas em centímetros
 - ✅ Cores disponíveis (Off White, Preto)
 
@@ -29,10 +29,16 @@ Sistema de controle interno para gerenciamento de pedidos de camisetas personali
 ## 🛠️ Tecnologias
 
 - **Angular 18** - Framework principal
+- **Supabase** - Backend como serviço (BaaS) para banco de dados
+- **Vercel** - Plataforma de deploy e hospedagem
 - **Tailwind CSS** - Framework de estilos
 - **TypeScript** - Tipagem estática
-- **Signals** - Sistema de reatividade do Angular
+- **ngx-mask** - Máscaras para inputs
 - **Responsive Design** - Mobile-first approach
+
+## 🤖 Desenvolvimento
+
+Este projeto foi desenvolvido com a assistência do **Cursor AI**, utilizando suas capacidades avançadas de geração de código, refatoração e debugging para acelerar o processo de desenvolvimento.
 
 ## 📱 Layout Responsivo
 
@@ -56,9 +62,24 @@ cd thefire-shirts
 # Instale as dependências
 npm install
 
+# Configure as variáveis de ambiente
+# Edite src/environments/environment.ts com suas credenciais do Supabase
+
 # Execute a aplicação
 npm start
 ```
+
+### Configuração do Supabase
+
+1. **Crie um projeto** no [Supabase](https://supabase.com)
+2. **Execute os scripts SQL** (veja seção Banco de Dados)
+3. **Configure as variáveis** em `src/environments/environment.ts`:
+   ```typescript
+   export const environment = {
+     SUPABASE_URL: 'sua-url-do-supabase',
+     SUPABASE_ANON_KEY: 'sua-chave-anonima',
+   };
+   ```
 
 ### Desenvolvimento
 ```bash
@@ -90,14 +111,52 @@ Este sistema é projetado para:
 3. **Especificações Técnicas**: Detalhar tamanhos e medidas
 4. **Controle de Pagamento**: Registrar formas de pagamento
 
-## 🗄️ Preparação para Banco de Dados
+## 🗄️ Banco de Dados (Supabase)
 
-A aplicação está preparada para integração com banco de dados. Para implementar:
+A aplicação utiliza o **Supabase** como backend, oferecendo:
 
-1. **Criar serviço de dados** para persistir os pedidos
-2. **Implementar validações** adicionais se necessário
-3. **Adicionar relatórios** internos se desejado
-4. **Configurar backup** dos dados
+- **PostgreSQL** - Banco de dados relacional
+- **API REST** - Endpoints automáticos
+- **Row Level Security** - Segurança a nível de linha
+- **Real-time** - Atualizações em tempo real
+- **Dashboard** - Interface administrativa
+
+### Estrutura das Tabelas
+
+```sql
+-- Tabela de Pedidos
+CREATE TABLE orders (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  full_name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  payment_method TEXT NOT NULL,
+  payment_date DATE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Tabela de Camisetas
+CREATE TABLE shirts (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+  color TEXT NOT NULL,
+  size TEXT NOT NULL,
+  bust_cm INTEGER,
+  waist_cm INTEGER,
+  hips_cm INTEGER,
+  length_cm INTEGER,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+## 🚀 Deploy (Vercel)
+
+O projeto está configurado para deploy automático na **Vercel**:
+
+- **Deploy automático** via Git
+- **Build otimizado** para produção
+- **CDN global** para performance
+- **HTTPS** automático
+- **Domínio personalizado** disponível
 
 ## 🎯 Estrutura do Sistema
 
@@ -141,12 +200,22 @@ Pedido
 
 Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
+## 🔗 Links Úteis
+
+- **Supabase Dashboard**: [supabase.com/dashboard](https://supabase.com/dashboard)
+- **Vercel Dashboard**: [vercel.com/dashboard](https://vercel.com/dashboard)
+- **Angular Docs**: [angular.io](https://angular.io)
+- **Tailwind CSS**: [tailwindcss.com](https://tailwindcss.com)
+
 ## 📞 Suporte
 
 Para dúvidas ou suporte interno:
 - Abra uma issue no GitHub
 - Entre em contato com a equipe The Fire
+- Consulte a documentação do Supabase e Vercel
 
 ---
 
-**The Fire** - Controle interno para camisetas personalizadas! 🔥
+**Conferência The Fire** - Sistema de pedidos de camisetas personalizadas! 🔥
+
+*Desenvolvido com Angular, Supabase, Vercel e assistência do Cursor AI*
